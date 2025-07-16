@@ -10,8 +10,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        
-      - name: Build
-        uses: oleksiikutuzov/flipperzero-ufbt-action@v1
+      - name: Build with ufbt
+        uses: flipperdevices/flipperzero-ufbt-action@v0.1
+        id: build-app
         with:
-          channel: dev
+          # Set to 'release' to build for latest published release version
+          sdk-channel: dev
+      - name: Upload app artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ github.event.repository.name }}-${{ steps.build-app.outputs.suffix }}
+          path: ${{ steps.build-app.outputs.fap-artifacts }}
